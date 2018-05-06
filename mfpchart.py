@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # from pprint import pprint
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import style
@@ -10,6 +11,8 @@ from datetime import date, timedelta
 red = "#ff7373"
 green = "#1fd084"
 blue = "#3399ff"
+
+PACKAGE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 totals = load_data()
 
@@ -117,3 +120,42 @@ ax3.axes.set_xlim([dates[avg_frame-1], dates[-1]])
 plt.subplots_adjust(left=0.08, bottom=0.16, right=0.83, top=0.95, wspace=0.50, hspace=.35)
 
 plt.show()
+
+with open('entries.json', 'r') as f:
+    totals = json.load(f)
+
+df = pd.DataFrame.from_dict(totals).T
+
+
+df[['carbohydrates','protein']] *= 4
+df['fat'] *= 9
+df['macro_cals'] = df[['fat', 'protein', 'carbohydrates']].sum(axis=1)
+df['cal_diff'] = df['calories'] - df['macro_cals']
+
+entrydf = df[['calories', 'macro_cals', 'entries']].copy()
+
+edict = {}
+edictlists = {}
+for day in entrydf['entries']:
+    for k, v in day.items():
+        k = ','.join(k.split(',')[:-1])
+        edict[k] = v
+
+for day in entrydf['entries']:
+    for k, v in day.items():
+        k = ','.join(k.split(',')[:-1])
+        templist =  edictlists.get(k, [])
+        templist.append(v)
+        edictlists[k] = templist[:]
+
+edict = {}
+counts = {}
+for date, day in entrydf['entries'].items():
+    for k, v in day.items():
+        k = ','.join(k.split(',')[:-1])
+        tmplist =  counts.get(k, [])
+        tmplist.append(date)
+        counts[k] = tmplist
+        edict[k] = v
+        edict[k]['dates'] = tmplist
+        edict[k]['occurences'] = len(tmplist)
