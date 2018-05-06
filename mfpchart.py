@@ -31,37 +31,6 @@ t_c_total = t_c/t_cals
 t_p_total = t_p/t_cals
 t_f_total = t_f/t_cals
 
-fat, carbs, protein, calories = [], [], [], []
-
-for day in dates:
-    total = totals[day]
-    fat.append(total['fat'])
-    carbs.append(total['carbohydrates'])
-    protein.append(total['protein'])
-    calories.append(total['calories']/10)
-
-avg_frame = 10
-carbsdf = pd.DataFrame({'carbs': carbs})
-carbsmean = carbsdf.rolling(window=avg_frame,center=False).mean()['carbs'].tolist()
-
-prodf = pd.DataFrame({'pro': protein})
-promean = prodf.rolling(window=avg_frame,center=False).mean()['pro'].tolist()
-
-fatdf = pd.DataFrame({'fat': fat})
-fatmean = fatdf.rolling(window=avg_frame,center=False).mean()['fat'].tolist()
-
-caldf = pd.DataFrame({'cal': calories})
-calmean = caldf.rolling(window=avg_frame,center=False).mean()['cal'].tolist()
-
-c_cals = [4 * c for c in carbs]
-p_cals = [4 * p for p in protein]
-t_cals = [9 * f for f in fat]
-total_cals = [sum(x) for x in zip(c_cals, p_cals, t_cals)]
-
-c_totals = [c/t for c, t in zip(c_cals, total_cals)]
-p_totals = [p/t for p, t in zip(p_cals, total_cals)]
-f_totals = [f/t for f, t in zip(t_cals, total_cals)]
-
 ### Matplotlib
 fig = plt.figure(figsize=(10,6))
 ax1 = plt.subplot2grid((2, 2), (0, 0), rowspan=1, colspan=1)
