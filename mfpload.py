@@ -8,7 +8,6 @@ import keyring
 import myfitnesspal
 
 MFP_START_DATE = date(2017, 1, 2)
-UPDATE_RANGE = 2
 
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
@@ -64,9 +63,10 @@ def run(all_dates=False):
         updated_totals, updated_entries = scrape_data(mfp)
     else:
         today = date.today()
-        from_date = today - timedelta(days=UPDATE_RANGE)
         totals = load_totals()
         entries = load_entries()
+        last_date = datetime.strptime(sorted(totals.keys())[-1], '%Y-%m-%d').date()
+        from_date = last_date - timedelta(days=1)
         updated_totals, updated_entries = scrape_data(mfp, from_date, 
                                                       totals, entries)
     save_data(updated_totals, updated_entries)
