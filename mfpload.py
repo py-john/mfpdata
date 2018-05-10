@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import os
-import csv
 import json
 from datetime import date, datetime, timedelta
 
@@ -21,7 +20,7 @@ def scrape_data(mfp, start_date=MFP_START_DATE, totals={}, entries={}):
     """Update and return totals/entries dicts starting from a given date.
 
     If no keyword args are given all the available data will be saved.
-    Totals are the macro and calorie amounts, entries are with the meal 
+    Totals are the macro and calorie amounts, entries are with the meal
     logs added.
     """
     current_day = start_date
@@ -31,7 +30,7 @@ def scrape_data(mfp, start_date=MFP_START_DATE, totals={}, entries={}):
         day_str = current_day.isoformat()
         totals[day_str] = data.totals
         entries[day_str] = data.totals
-        entries[day_str]['entries'] = {e.name:e.totals for e in data.entries}
+        entries[day_str]['entries'] = {e.name: e.totals for e in data.entries}
         current_day += timedelta(days=1)
     return totals, entries
 
@@ -62,12 +61,12 @@ def run(all_dates=False):
     if all_dates:
         updated_totals, updated_entries = scrape_data(mfp)
     else:
-        today = date.today()
         totals = load_totals()
         entries = load_entries()
-        last_date = datetime.strptime(sorted(totals.keys())[-1], '%Y-%m-%d').date()
+        last_date = datetime.strptime(sorted(totals.keys())[-1],
+                                      '%Y-%m-%d').date()
         from_date = last_date - timedelta(days=1)
-        updated_totals, updated_entries = scrape_data(mfp, from_date, 
+        updated_totals, updated_entries = scrape_data(mfp, from_date,
                                                       totals, entries)
     save_data(updated_totals, updated_entries)
 
