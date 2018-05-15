@@ -45,16 +45,3 @@ for date, day in entrydf['entries'].items():
         edict[k] = v
         edict[k]['dates'] = tmplist
         edict[k]['occurences'] = len(tmplist)
-
-food_items = pd.DataFrame(edict).T
-food_items.index = food_items.index.str.capitalize()
-
-food_items['cal_diff'] = food_items['calories'] - (food_items['carbohydrates']*4 + food_items['protein']*4 + food_items['fat']*9)
-food_items['pct_diff'] = abs(food_items['cal_diff']/food_items['calories'])
-
-del food_items['sugar']
-# del food_items['fiber']
-
-cols = ['dates', 'occurences', 'fiber','carbohydrates', 'protein', 'fat', 'calories']
-
-# cols = ['pct_diff', 'cal_diff', 'fiber','carbohydrates', 'protein', 'fat', 'calories']
