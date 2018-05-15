@@ -16,12 +16,11 @@ def load_client(username):
     return myfitnesspal.Client(username)
 
 
-def scrape_data(mfp, start_date=MFP_START_DATE, totals={}, entries={}):
-    """Update and return totals/entries dicts starting from a given date.
+def scrape_data(mfp, start_date=MFP_START_DATE, totals={}):
+    """Update and return totals dict starting from a given date.
 
     If no keyword args are given all the available data will be saved.
-    Totals are the macro and calorie amounts, entries are with the meal
-    logs added.
+    totals has all the macro data, the 'entries' key is for the meal logs.
     """
     current_day = start_date
     while(current_day <= date.today()):
@@ -29,29 +28,20 @@ def scrape_data(mfp, start_date=MFP_START_DATE, totals={}, entries={}):
         data = mfp.get_date(current_day)
         day_str = current_day.isoformat()
         totals[day_str] = data.totals
-        entries[day_str] = data.totals
-        entries[day_str]['entries'] = {e.name: e.totals for e in data.entries}
+        totals[day_str]['entries'] = {e.name: e.totals for e in data.entries}
         current_day += timedelta(days=1)
-    return totals, entries
+    return totals
 
 
-def save_data(totals, entries):
-    """Save totals/entries data to json."""
+def save_data(totals):
+    """Save totals data to json."""
     with open('totals.json', 'w') as f:
         json.dump(totals, f, indent=4)
-    with open('entries.json', 'w') as f:
-        json.dump(entries, f, indent=7)
 
 
-def load_totals():
+def load_data():
     """Return totals json data."""
     with open('totals.json', 'r') as f:
-        return json.load(f)
-
-
-def load_entries():
-    """Return entries json data."""
-    with open('entries.json', 'r') as f:
         return json.load(f)
 
 
@@ -59,16 +49,15 @@ def run(all_dates=False):
     """Save data from mfp client for specific time frame."""
     mfp = load_client(keyring.get_password('mfp', 'user'))
     if all_dates:
-        updated_totals, updated_entries = scrape_data(mfp)
+        updated_totals = scrape_data(mfp)
     else:
-        totals = load_totals()
-        entries = load_entries()
+        totals = load_data()
         last_date = datetime.strptime(sorted(totals.keys())[-1],
                                       '%Y-%m-%d').date()
         from_date = last_date - timedelta(days=1)
-        updated_totals, updated_entries = scrape_data(mfp, from_date,
-                                                      totals, entries)
-    save_data(updated_totals, updated_entries)
+        updated_totals = scrape_data(mfp, from_date, totals)
+
+    save_data(updated_totals)
 
 
 def main():
