@@ -1,3 +1,3 @@
 ## mfpdata
 
-Charting and analyzing my person nutrition data from myfitnesspal.
+Charting and analyzing my personal nutrition data from myfitnesspal.
