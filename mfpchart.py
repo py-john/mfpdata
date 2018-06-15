@@ -7,9 +7,7 @@ import matplotlib.pyplot as plt
 PACKAGE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 with open(f'{PACKAGE_DIR}/totals.json', 'r') as f:
-    totals = json.load(f)
-
-df = pd.DataFrame.from_dict(totals).T
+    df = pd.DataFrame.from_dict(json.load(f)).T
 
 df[['carbohydrates','protein']] *= 4
 df['fat'] *= 9
@@ -22,11 +20,29 @@ df['crb_pct'] = df['carbohydrates'] / df['macro_cals']
 df['pro_pct'] = df['protein'] / df['macro_cals']
 df['fat_pct'] = df['fat'] / df['macro_cals']
 
-edict = {}
-for day in df['entries']:
-    for food_item, macros in day.items():
-        name = ','.join(food_item.split(',')[:-1])
-        templist = edict.get(name, [])
-        templist.append(macros)
-        edict[name] = templist[:]
+df['crb_pct_mean'] = df['crb_pct'].rolling(window=7, center=False).mean()
+df['pro_pct_mean'] = df['pro_pct'].rolling(window=7, center=False).mean()
+df['fat_pct_mean'] = df['fat_pct'].rolling(window=7, center=False).mean()
+rolling_pct = df[['crb_pct_mean', 'pro_pct_mean', 'fat_pct_mean']]
+# plt.plot(df[['crb_pct_mean', 'pro_pct_mean', 'fat_pct_mean']])
+# plt.show()
 
+df['crb_mean'] = df['carbohydrates'].rolling(window=7, center=False).mean()
+df['pro_mean'] = df['protein'].rolling(window=7, center=False).mean()
+df['fat_mean'] = df['fat'].rolling(window=7, center=False).mean()
+df['cal_mean'] = df['macro_cals'].rolling(window=7, center=False).mean()
+rolling_cals = df[['crb_mean', 'fat_mean','pro_mean', 'cal_mean']]
+
+fig = plt.figure()
+ax1 = fig.add_subplot(221)
+ax1.plot(rolling_pct)
+
+ax2 = fig.add_subplot(222)
+ax2.plot(rolling_cals)
+
+plt.show()
+
+# f, ax = plt.subplots(2, sharex=True)
+# f.suptitle('Sharing X axis')
+# ax[0].plot(rolling_pct)
+# ax[1].plot(rolling_cals)
