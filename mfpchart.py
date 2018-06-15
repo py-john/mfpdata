@@ -24,8 +24,6 @@ df['crb_pct_mean'] = df['crb_pct'].rolling(window=7, center=False).mean()
 df['pro_pct_mean'] = df['pro_pct'].rolling(window=7, center=False).mean()
 df['fat_pct_mean'] = df['fat_pct'].rolling(window=7, center=False).mean()
 rolling_pct = df[['crb_pct_mean', 'pro_pct_mean', 'fat_pct_mean']]
-# plt.plot(df[['crb_pct_mean', 'pro_pct_mean', 'fat_pct_mean']])
-# plt.show()
 
 df['crb_mean'] = df['carbohydrates'].rolling(window=7, center=False).mean()
 df['pro_mean'] = df['protein'].rolling(window=7, center=False).mean()
@@ -34,10 +32,9 @@ df['cal_mean'] = df['macro_cals'].rolling(window=7, center=False).mean()
 rolling_cals = df[['crb_mean', 'fat_mean','pro_mean', 'cal_mean']]
 
 fig = plt.figure()
-ax1 = fig.add_subplot(221)
+ax1 = fig.add_subplot(211)
 ax1.plot(rolling_pct)
-
-ax2 = fig.add_subplot(222)
+ax2 = fig.add_subplot(212)
 ax2.plot(rolling_cals)
 
 plt.show()
@@ -46,3 +43,4 @@ plt.show()
 # f.suptitle('Sharing X axis')
 # ax[0].plot(rolling_pct)
 # ax[1].plot(rolling_cals)
+# plt.show()
