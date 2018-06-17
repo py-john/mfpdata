@@ -19,9 +19,9 @@ df['cal_diff'] = df['calories'] - df['macro_cals']
 
 df = df[df['macro_cals'] != 0]
 
-df['crb_pct'] = df['carbohydrates'] / df['macro_cals']
-df['pro_pct'] = df['protein'] / df['macro_cals']
-df['fat_pct'] = df['fat'] / df['macro_cals']
+df['crb_pct'] = df['carbohydrates'] * 100 / df['macro_cals']
+df['pro_pct'] = df['protein'] * 100 / df['macro_cals']
+df['fat_pct'] = df['fat'] * 100 / df['macro_cals']
 
 df['crb_pct_mean'] = df['crb_pct'].rolling(window=7, center=False).mean()
 df['pro_pct_mean'] = df['pro_pct'].rolling(window=7, center=False).mean()
