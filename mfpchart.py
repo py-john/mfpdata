@@ -7,7 +7,6 @@ import matplotlib.dates as mdates
 
 PACKAGE_DIR = os.path.dirname(os.path.realpath(__file__))
 
-
 with open(f'{PACKAGE_DIR}/totals.json', 'r') as f:
     df = pd.DataFrame.from_dict(json.load(f)).T
 
@@ -55,6 +54,10 @@ ax2.xaxis.set_major_formatter(date_fmt)
 
 ax1.tick_params(axis='x', rotation=20)
 ax2.tick_params(axis='x', rotation=20)
+
+ax1.set_title('Macro Percentages')
+ax2.set_title('Macro and Total Calories')
+
 plt.show()
 
 # f, ax = plt.subplots(2, sharex=True)
