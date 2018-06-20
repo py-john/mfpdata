@@ -58,15 +58,6 @@ ax2.tick_params(axis='x', rotation=20)
 ax1.set_title('Macro Percentages')
 ax2.set_title('Macro and Total Calories')
 
+plt.tight_layout()
 plt.show()
 
-# f, ax = plt.subplots(2, sharex=True)
-# f.suptitle('Sharing X axis')
-# ax[0].plot(rolling_pct)
-# ax[1].plot(rolling_cals)
-# for axis in ax:
-#     months = mdates.MonthLocator()
-#     date_fmt = mdates.DateFormatter('%m/%Y')
-#     axis.xaxis.set_major_locator(months)
-#     axis.xaxis.set_major_formatter(date_fmt)
-# plt.show()
