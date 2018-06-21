@@ -69,6 +69,11 @@ def plot_data(pct, cals):
     plt.show()
 
 
-df = get_dataframe()
-percent, calories = get_averages(df)
-plot_data(percent, calories)
+def main():
+    df = get_dataframe()
+    percent, calories = get_averages(df)
+    plot_data(percent, calories)
+
+
+if __name__ == '__main__':
+    main()
