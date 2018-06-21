@@ -44,27 +44,23 @@ def get_averages(df):
     return rolling_pct, rolling_cals
 
 
-def plot_data(rolling_pct, rolling_cals):
+def plot_data(pct, cals):
     fig = plt.figure()
-    ax1 = fig.add_subplot(211)
-    ax1.plot(rolling_cals)
-    ax2 = fig.add_subplot(212)
-    ax2.plot(rolling_pct)
 
-    major_months = mdates.MonthLocator(interval=2)
+    ax1 = fig.add_subplot(211)
+    ax1.plot(cals)
+    ax2 = fig.add_subplot(212)
+    ax2.plot(pct)
+
     months = mdates.MonthLocator()
+    major_months = mdates.MonthLocator(interval=2)
     date_fmt = mdates.DateFormatter("%b '%y")
 
-    ax1.xaxis.set_major_locator(major_months)
-    ax1.xaxis.set_minor_locator(months)
-    ax1.xaxis.set_major_formatter(date_fmt)
-
-    ax2.xaxis.set_major_locator(major_months)
-    ax2.xaxis.set_minor_locator(months)
-    ax2.xaxis.set_major_formatter(date_fmt)
-
-    ax1.tick_params(axis='x', rotation=20)
-    ax2.tick_params(axis='x', rotation=20)
+    for ax in (ax1, ax2):
+        ax.xaxis.set_major_locator(major_months)
+        ax.xaxis.set_minor_locator(months)
+        ax.xaxis.set_major_formatter(date_fmt)
+        ax.tick_params(axis='x', rotation=20)
 
     ax1.set_title('Calories')
     ax2.set_title('Percentages')
@@ -74,5 +70,5 @@ def plot_data(rolling_pct, rolling_cals):
 
 
 df = get_dataframe()
-rolling_pct, rolling_cals = get_averages(df)
-plot_data(rolling_pct, rolling_cals)
+percent, calories = get_averages(df)
+plot_data(percent, calories)
