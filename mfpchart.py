@@ -44,13 +44,13 @@ def get_averages(df):
     return rolling_pct, rolling_cals
 
 
-def plot_data(pct, cals):
-    fig = plt.figure()
+def plot_data(percent, cals):
+    fig = plt.figure(figsize=(9, 7))
 
     ax1 = fig.add_subplot(211)
     ax1.plot(cals)
     ax2 = fig.add_subplot(212)
-    ax2.plot(pct)
+    ax2.plot(percent)
 
     months = mdates.MonthLocator()
     major_months = mdates.MonthLocator(interval=2)
@@ -66,6 +66,9 @@ def plot_data(pct, cals):
     ax2.set_title('Percentages')
 
     plt.tight_layout()
+    lines, labels = ax1.get_legend_handles_labels()
+    ax1.legend(['Carbs', 'Fat', 'Protein', 'Total'])
+    ax2.legend(['Carbs', 'Fat', 'Protein'])
     plt.show()
 
 
