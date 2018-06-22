@@ -9,6 +9,7 @@ PACKAGE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
 def get_dataframe():
+    """Return dataframe from json file."""
     with open(f'{PACKAGE_DIR}/totals.json', 'r') as f:
         df = pd.DataFrame.from_dict(json.load(f)).T
     df.index = pd.to_datetime(df.index)
@@ -17,7 +18,8 @@ def get_dataframe():
 
 
 def set_calories(df):
-    df[['carbohydrates','protein']] *= 4
+    """Set macro columns to calorie values and percentage to whole numbers."""
+    df[['carbohydrates', 'protein']] *= 4
     df['fat'] *= 9
     df['macro_cals'] = df[['fat', 'protein', 'carbohydrates']].sum(axis=1)
 
@@ -29,6 +31,7 @@ def set_calories(df):
 
 
 def get_averages(df):
+    """Return rolling mean dfs for calories and macro percentages."""
     df['crb_pct_mean'] = df['crb_pct'].rolling(window=8, center=False).mean()
     df['pro_pct_mean'] = df['pro_pct'].rolling(window=8, center=False).mean()
     df['fat_pct_mean'] = df['fat_pct'].rolling(window=8, center=False).mean()
@@ -45,6 +48,7 @@ def get_averages(df):
 
 
 def plot_data(percent, cals):
+    """Plot the rolling means for calories and macro percentages."""
     fig = plt.figure(figsize=(9, 7))
 
     ax1 = fig.add_subplot(211)
@@ -73,6 +77,7 @@ def plot_data(percent, cals):
 
 
 def main():
+    """Get the dataframe and plot the data."""
     df = get_dataframe()
     percent, calories = get_averages(df)
     plot_data(percent, calories)
