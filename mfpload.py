@@ -16,7 +16,7 @@ def load_client(username):
     return myfitnesspal.Client(username)
 
 
-def scrape_data(mfp, start_date=MFP_START_DATE, totals={}):
+def scrape_data(mfp, start_date=MFP_START_DATE, totals={}, weight={}):
     """Update and return totals dict starting from a given date.
 
     If no keyword args are given all the available data will be saved.
@@ -30,19 +30,28 @@ def scrape_data(mfp, start_date=MFP_START_DATE, totals={}):
         totals[day_str] = data.totals
         totals[day_str]['entries'] = {e.name: e.totals for e in data.entries}
         current_day += timedelta(days=1)
-    return totals
+    new_weight = mfp.get_measurements('Weight', start_date))
+    for w in reversed(new_weight):
+        day_str = w.isoformat()
+        weight[day_str] = new_weight[w]
+    return totals, weight
 
 
-def save_data(totals):
-    """Save totals data to json."""
+def save_data(totals, weight):
+    """Save totals and weight data to json."""
     with open('totals.json', 'w') as f:
         json.dump(totals, f, indent=4)
+    with open('weight.json', 'w') as f:
+        json.dump(weight, f, indent=4)
 
 
 def load_data():
-    """Return totals json data."""
+    """Return totals and weight json data."""
     with open('totals.json', 'r') as f:
-        return json.load(f)
+        totals = json.load(f)
+    with open('weight.json', 'r') as f:
+        weight = json.load(f)
+    return totals, weight
 
 
 def run(all_dates=False):
@@ -51,13 +60,13 @@ def run(all_dates=False):
     if all_dates:
         updated_totals = scrape_data(mfp)
     else:
-        totals = load_data()
+        totals, weight = load_data()
         last_date = datetime.strptime(sorted(totals.keys())[-1],
                                       '%Y-%m-%d').date()
         from_date = last_date - timedelta(days=1)
-        updated_totals = scrape_data(mfp, from_date, totals)
+        updated_totals = scrape_data(mfp, from_date, totals, weight)
 
-    save_data(updated_totals)
+    save_data(updated_totals, updated_weight)
 
 
 def main():
