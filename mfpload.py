@@ -30,7 +30,7 @@ def scrape_data(mfp, start_date=MFP_START_DATE, totals={}, weight={}):
         totals[day_str] = data.totals
         totals[day_str]['entries'] = {e.name: e.totals for e in data.entries}
         current_day += timedelta(days=1)
-    new_weight = mfp.get_measurements('Weight', start_date))
+    new_weight = mfp.get_measurements('Weight', start_date)
     for w in reversed(new_weight):
         day_str = w.isoformat()
         weight[day_str] = new_weight[w]
@@ -64,9 +64,9 @@ def run(all_dates=False):
         last_date = datetime.strptime(sorted(totals.keys())[-1],
                                       '%Y-%m-%d').date()
         from_date = last_date - timedelta(days=1)
-        updated_totals = scrape_data(mfp, from_date, totals, weight)
+        new_totals, new_weight = scrape_data(mfp, from_date, totals, weight)
 
-    save_data(updated_totals, updated_weight)
+    save_data(new_totals, new_weight)
 
 
 def main():
