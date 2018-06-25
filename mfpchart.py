@@ -51,28 +51,34 @@ def get_averages(df):
     return rolling_pct, rolling_cals
 
 
-def plot_data(percent, cals):
+def plot_data(percent, calories, weight):
     """Plot the rolling means for calories and macro percentages."""
     fig = plt.figure(figsize=(9, 7))
 
-    ax1 = fig.add_subplot(211)
-    ax1.plot(cals)
-    ax2 = fig.add_subplot(212)
+    ax1 = fig.add_subplot(311)
+    ax1.plot(calories)
+    ax2 = fig.add_subplot(312)
     ax2.plot(percent)
+    ax3 = fig.add_subplot(313)
+    ax3.plot(weight)
 
     months = mdates.MonthLocator()
     major_months = mdates.MonthLocator(interval=2)
     date_fmt = mdates.DateFormatter("%b '%y")
 
-    for ax in (ax1, ax2):
+    for ax in (ax1, ax2, ax3):
         ax.xaxis.set_major_locator(major_months)
         ax.xaxis.set_minor_locator(months)
         ax.xaxis.set_major_formatter(date_fmt)
         ax.tick_params(axis='x', rotation=20)
-        ax.set_xlim([pd.Timestamp(2017, 1, 1), cals.index[-1] + pd.Timedelta('2 days')])
+        ax.set_xlim([pd.Timestamp(2017, 1, 1), 
+                     calories.index[-1] + pd.Timedelta('2 days')])
+
+    ax3.set_ylim([160, 200])
 
     ax1.set_title('Calories')
     ax2.set_title('Percentages')
+    ax3.set_title('Weight')
 
     plt.tight_layout()
     lines, labels = ax1.get_legend_handles_labels()
@@ -85,7 +91,7 @@ def main():
     """Get the dataframe and plot the data."""
     totals, weight = get_dataframes()
     percent, calories = get_averages(totals)
-    plot_data(percent, calories)
+    plot_data(percent, calories, weight)
 
 
 if __name__ == '__main__':
