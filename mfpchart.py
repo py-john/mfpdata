@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import json
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -8,13 +9,16 @@ import matplotlib.dates as mdates
 PACKAGE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
-def get_dataframe():
-    """Return dataframe from json file."""
+def get_dataframes():
+    """Return totals and weight dataframes from json files."""
     with open(f'{PACKAGE_DIR}/totals.json', 'r') as f:
-        df = pd.DataFrame.from_dict(json.load(f)).T
-    df.index = pd.to_datetime(df.index)
-    set_calories(df)
-    return df
+        totals = pd.DataFrame(json.load(f)).T
+    with open(f'{PACKAGE_DIR}/weight.json', 'r') as f:
+        weight = pd.Series(json.load(f)).T
+    totals.index = pd.to_datetime(totals.index)
+    weight.index = pd.to_datetime(weight.index)
+    set_calories(totals)
+    return totals, weight
 
 
 def set_calories(df):
@@ -65,6 +69,7 @@ def plot_data(percent, cals):
         ax.xaxis.set_minor_locator(months)
         ax.xaxis.set_major_formatter(date_fmt)
         ax.tick_params(axis='x', rotation=20)
+        ax.set_xlim([pd.Timestamp(2017, 1, 1), cals.index[-1] + pd.Timedelta('2 days')])
 
     ax1.set_title('Calories')
     ax2.set_title('Percentages')
@@ -78,8 +83,8 @@ def plot_data(percent, cals):
 
 def main():
     """Get the dataframe and plot the data."""
-    df = get_dataframe()
-    percent, calories = get_averages(df)
+    totals, weight = get_dataframes()
+    percent, calories = get_averages(totals)
     plot_data(percent, calories)
 
 
