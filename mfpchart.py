@@ -54,6 +54,7 @@ def get_averages(df):
 def plot_data(percent, calories, weight):
     """Plot the rolling means for calories and macro percentages."""
     fig = plt.figure(figsize=(9, 7))
+    fig.canvas.set_window_title('Myfitnesspal')
 
     ax1 = fig.add_subplot(311)
     ax1.plot(calories)
@@ -71,6 +72,7 @@ def plot_data(percent, calories, weight):
         ax.xaxis.set_minor_locator(months)
         ax.xaxis.set_major_formatter(date_fmt)
         ax.tick_params(axis='x', rotation=20)
+        ax.tick_params(right=True, labelright=True, gridOn=True)
         ax.set_xlim([pd.Timestamp(2017, 1, 1), 
                      calories.index[-1] + pd.Timedelta('2 days')])
 
