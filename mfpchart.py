@@ -73,7 +73,7 @@ def plot_data(percent, calories, weight):
         ax.xaxis.set_major_formatter(date_fmt)
         ax.tick_params(axis='x', rotation=20)
         ax.tick_params(right=True, labelright=True, gridOn=True)
-        ax.set_xlim([pd.Timestamp(2017, 1, 1), 
+        ax.set_xlim([pd.Timestamp(2017, 1, 1),
                      calories.index[-1] + pd.Timedelta('2 days')])
 
     ax3.set_ylim([160, 200])

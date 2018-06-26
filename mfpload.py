@@ -58,7 +58,7 @@ def run(all_dates=False):
     """Save data from mfp client for specific time frame."""
     mfp = load_client(keyring.get_password('mfp', 'user'))
     if all_dates:
-        updated_totals = scrape_data(mfp)
+        new_totals, new_weight = scrape_data(mfp)
     else:
         totals, weight = load_data()
         last_date = datetime.strptime(sorted(totals.keys())[-1],
