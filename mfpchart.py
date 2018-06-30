@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 PACKAGE_DIR = os.path.dirname(os.path.realpath(__file__))
-
+WINDOW = 7   # Number of days for rolling average
 
 def get_dataframes():
     """Return totals and weight dataframes from json files."""
@@ -36,14 +36,14 @@ def set_calories(df):
 
 def get_averages(df):
     """Return rolling mean dfs for calories and macro percentages."""
-    df['crb_pct_mean'] = df['crb_pct'].rolling(window=8, center=False).mean()
-    df['pro_pct_mean'] = df['pro_pct'].rolling(window=8, center=False).mean()
-    df['fat_pct_mean'] = df['fat_pct'].rolling(window=8, center=False).mean()
+    df['crb_pct_mean'] = df['crb_pct'].rolling(window=WINDOW, center=False).mean()
+    df['pro_pct_mean'] = df['pro_pct'].rolling(window=WINDOW, center=False).mean()
+    df['fat_pct_mean'] = df['fat_pct'].rolling(window=WINDOW, center=False).mean()
 
-    df['crb_mean'] = df['carbohydrates'].rolling(window=8, center=False).mean()
-    df['pro_mean'] = df['protein'].rolling(window=8, center=False).mean()
-    df['fat_mean'] = df['fat'].rolling(window=8, center=False).mean()
-    df['cal_mean'] = df['calories'].rolling(window=8, center=False).mean()
+    df['crb_mean'] = df['carbohydrates'].rolling(window=WINDOW, center=False).mean()
+    df['pro_mean'] = df['protein'].rolling(window=WINDOW, center=False).mean()
+    df['fat_mean'] = df['fat'].rolling(window=WINDOW, center=False).mean()
+    df['cal_mean'] = df['calories'].rolling(window=WINDOW, center=False).mean()
 
     rolling_pct = df[['crb_pct_mean', 'fat_pct_mean', 'pro_pct_mean']]
     rolling_cals = df[['crb_mean', 'fat_mean', 'pro_mean', 'cal_mean']]
